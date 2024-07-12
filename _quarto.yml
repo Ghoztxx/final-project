@@ -8,7 +8,12 @@ website:
       - href: index.qmd
         text: Home
       - about.qmd
-      - example-1.Rmd
+      - text: Data
+        menu:
+          - href: EDA.qmd
+            text: EDA
+          - href: predictions.qmd
+            text: Predictions
       - source.qmd
       
 
