@@ -227,11 +227,17 @@ for (day in 1:num_days) {
 }
 
 # Predict temperatures for next week
-predictions_next_week <- predict(rf_model, newdata = new_data)
-predictions_next_week
 
 
 ```
+
+```{r}
+# Predict temperatures for next week
+predictions_next_week <- predict(rf_model, newdata = new_data)
+predictions_next_week
+
+```
+
 
 ```{r}
 # Set the starting date to February 23, 2022
