@@ -37,11 +37,6 @@ train
 ```
 
 
-```{r}
-library(naniar)
-
-vis_miss(train)
-```
 
 ```{r}
 sum(is.na(train$particle1))
