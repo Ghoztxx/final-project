@@ -2,4 +2,8 @@
 title: "About Me"
 ---
 
-About this site
+**Hi Everyone!**
+
+My name is Natali, and I made this webpage! 
+Let me tell a little about myself.
+I love videogaming, programming, robotics and creating new things. I'm also interested in exploring others culter, watching anime, reading books and so on....

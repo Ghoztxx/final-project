@@ -109,12 +109,20 @@ imporctance <- varImpPlot(rf_model)
 ```
 
 ```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| include: false
 predictions <- predict(rf_model, newdata = test_features)
 
 predictions[is.na(predictions)] <- mean(predictions, na.rm = TRUE)
 ```
 
 ```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| include: false
 mae <- mean(abs(predictions - test_labels))
 cat("Mean Absolute Error (MAE):", mae, "\n")
 
