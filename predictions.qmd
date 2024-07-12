@@ -1,0 +1,239 @@
+---
+title: "Predictions"
+editor: visual
+execute:
+  echo: false
+  warning: false
+---
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| include: false
+library(tidyverse)
+library(randomForest)
+library(caret)
+library(corrplot)
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| include: false
+
+df <- read_csv("data.csv")
+df$time <- as.POSIXct(df$time, format = "%Y-%m-%d %H:%M:%S")
+df <- df[, -10]
+
+features <- select(df, -time)
+labels <- df$temperature
+
+
+set.seed(123)
+train_indices <- createDataPartition(labels, p = 0.7, list = FALSE)
+train_features <- features[train_indices, ]
+train_labels <- labels[train_indices]
+test_features <- features[-train_indices, ]
+test_labels <- labels[-train_indices]
+
+train <- data.frame(train_features, temperature = train_labels)
+
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| include: false
+train
+```
+
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| include: false
+sum(is.na(train$particle1))
+
+sum(is.na(train_labels))
+
+sum(is.na(train_features))
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| include: false
+df$particle1[is.na(df$particle1)] <- mean(df$particle1, na.rm = TRUE)
+df$particle2[is.na(df$particle2)] <- mean(df$particle2, na.rm = TRUE)
+df$particle3[is.na(df$particle3)] <- mean(df$particle3, na.rm = TRUE)
+
+train$particle1[is.na(train$particle1)] <- mean(train$particle1, na.rm = TRUE)
+train$particle2[is.na(train$particle2)] <- mean(train$particle2, na.rm = TRUE)
+train$particle3[is.na(train$particle3)] <- mean(train$particle3, na.rm = TRUE)
+
+
+train_features$particle1[is.na(train_features$particle1)] <- mean(train_features$particle1, na.rm = TRUE)
+train_features$particle2[is.na(train_features$particle2)] <- mean(train_features$particle2, na.rm = TRUE)
+train_features$particle3[is.na(train_features$particle3)] <- mean(train_features$particle3, na.rm = TRUE)
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| include: false
+rf_model <- randomForest(train_labels ~ ., data = train_features, ntree = 500)
+
+rf_model
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| include: false
+imporctance <- varImpPlot(rf_model)
+```
+
+```{r}
+predictions <- predict(rf_model, newdata = test_features)
+
+predictions[is.na(predictions)] <- mean(predictions, na.rm = TRUE)
+```
+
+```{r}
+mae <- mean(abs(predictions - test_labels))
+cat("Mean Absolute Error (MAE):", mae, "\n")
+
+mape <- mean(abs(predictions - test_labels) / test_labels) * 100
+accuracy <- 100 - mape
+cat("Accuracy:", accuracy, "%\n")
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| include: false
+plot2 <- ggplot(plot_data, aes(x = Actual, y = Actual - Predicted)) +
+  geom_point() +
+  labs(x = "Actual Temperature", y = "Residual", title = "Residual Plot")
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| include: false
+
+plot_data <- data.frame(
+  Actual = test_labels,   
+  Predicted = predictions 
+)
+
+plot_data$index <- seq_along(test_labels)
+
+ggplot(plot_data, aes(x = index)) +
+  geom_line(aes(y = Actual, color = "Actual")) + 
+  geom_line(aes(y = Predicted, color = "Predicted")) +  
+  scale_color_manual(name = "Series", values = c(Actual = "blue", Predicted = "red")) + 
+  labs(x = "Size", y = "Temperature", title = "Actual vs. Predicted Temperature") + 
+  theme_minimal()
+
+```
+
+```{r}
+plot1
+```
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| include: false
+
+
+num_days <- 7
+new_data <- data.frame(
+  temperature = rep(NA, num_days),
+  humidity = rep(NA, num_days),
+  speed = rep(NA, num_days),
+  rain = rep(NA, num_days),
+  pressure = rep(NA, num_days),
+  particle1 = rep(NA, num_days), 
+  particle2 = rep(NA, num_days), 
+  particle3 = rep(NA, num_days)
+)
+
+
+for (day in 1:num_days) {
+  new_data$temperature[day] <- mean(train$temperature, na.rm = TRUE) + rnorm(1, mean = 0, sd = 3)
+  new_data$humidity[day] <- mean(train$humidity, na.rm = TRUE) + rnorm(1, mean = 0, sd = 5)
+  new_data$speed[day] <- mean(train$speed, na.rm = TRUE) + rnorm(1, mean = 0, sd = 2)
+  new_data$rain[day] <- mean(train$rain, na.rm = TRUE) + rnorm(1, mean = 0, sd = 1)
+  new_data$pressure[day] <- mean(train$pressure, na.rm = TRUE) + rnorm(1, mean = 0, sd = 3)
+  new_data$particle1[day] <- mean(train$particle1, na.rm = TRUE) + rnorm(1, mean = 0, sd = 0.5)
+  new_data$particle2[day] <- mean(train$particle2, na.rm = TRUE) + rnorm(1, mean = 0, sd = 0.5)
+  new_data$particle3[day] <- mean(train$particle3, na.rm = TRUE) + rnorm(1, mean = 0, sd = 0.5)
+}
+
+
+predictions_next_week <- predict(rf_model, newdata = new_data)
+predictions_next_week
+
+
+```
+
+```{r}
+
+start_date <- as.Date("2022-02-23")
+
+
+dates_next_week <- seq(start_date, by = "day", length.out = 7)
+
+
+plot_data_next_week <- data.frame(
+  Date = dates_next_week,
+  Predicted_Temperature = predictions_next_week
+)
+
+
+ggplot(plot_data_next_week, aes(x = Date, y = Predicted_Temperature)) +
+  geom_line(color = "blue") +
+  geom_point(color = "blue") +
+  labs(x = "Date", y = "Predicted Temperature", title = "Predicted Temperatures for Next Week") +
+  theme_minimal()
+
+```
+
+```{r}
+df$time <- as.POSIXct(df$time)
+
+
+plot_data <- data.frame(
+  hour = df$time,
+  Actual_Temperature = df$temperature,
+  Predicted_Temperature = c(rep(NA, nrow(df) - 7), predictions_next_week)
+)
+
+
+ggplot(plot_data, aes(x = hour)) +
+  geom_line(aes(y = Actual_Temperature, color = "Actual")) +
+  geom_line(aes(y = Predicted_Temperature, color = "Predicted"), linetype = "dashed") +
+  labs(x = "Date", y = "Temperature", title = "Actual vs. Predicted Temperature") +
+  scale_color_manual(name = "Series", values = c("Actual" = "blue", "Predicted" = "red")) +
+  theme_minimal()
+
+```
