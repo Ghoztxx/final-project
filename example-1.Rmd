@@ -197,10 +197,7 @@ plot2
 
 
 ```{r}
-#| echo: false
-#| warning: false
-#| message: false
-#| include: false
+
 # Simulate different scenarios for next week
 num_days <- 7
 new_data <- data.frame(
