@@ -247,10 +247,7 @@ ggplot(plot_data_next_week, aes(x = Date, y = Predicted_Temperature)) +
 
 
 
-```{r}
-tail(df)
 
-```
 
 
 
@@ -275,40 +272,4 @@ ggplot(plot_data, aes(x = hour)) +
 ```
 
 
-
-```{r}
-ggplot(df, aes(x = temperature)) +
-  geom_histogram(binwidth = 1, fill = "blue", color = "black", alpha = 0.5) +
-  labs(x = "Temperature", y = "Frequency", title = "Distribution of Temperature") +
-  theme_minimal()
-
-```
-
-```{r}
-library(forecast)
-df_ts <- ts(df$temperature, frequency = 7)  
-decomposed <- decompose(df_ts)
-autoplot(decomposed) + labs(title = "Time Series Decomposition of Temperature")
-
-
-```
-
-
-
-
-
-```{r}
-graph2 <- ggplot(df, aes(x = time, y = temperature)) +
-  geom_bar(stat = 'identity', color = 'steelblue', alpha = 0.8) +  # Adjust appearance of bars
-  scale_fill_brewer(palette = "Set3") +  # Color palette for bars
-  labs(
-    title = "Temperature Over Time",
-    x = "Time",
-    y = "Temperature (°C)"
-  ) +
-  theme_minimal() +  # Use minimal theme
-  theme(legend.position = "none")  # Remove legend for fill color
-
-print(graph2)
-```
 

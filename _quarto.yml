@@ -12,7 +12,7 @@ website:
         menu:
           - href: EDA.qmd
             text: EDA
-          - href: predictions.qmd
+          - href: example-1.Rmd
             text: Predictions
       - source.qmd
       
