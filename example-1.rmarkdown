@@ -54,8 +54,6 @@ train <- data.frame(train_features, temperature = train_labels)
 train
 ```
 
-
-
 ```{r}
 #| echo: false
 #| warning: false
@@ -173,6 +171,7 @@ ggplot(plot_data, aes(x = index)) +
   theme_minimal()
 
 ```
+
 ```{r}
 plot1
 ```
@@ -180,7 +179,6 @@ plot1
 ```{r}
 plot2
 ```
-
 
 ```{r}
 #| echo: false
@@ -241,14 +239,10 @@ ggplot(plot_data_next_week, aes(x = Date, y = Predicted_Temperature)) +
 
 ```
 
-
-
 ```{r}
 tail(df)
 
 ```
-
-
 
 ```{r}
 df$time <- as.POSIXct(df$time)
@@ -269,6 +263,7 @@ ggplot(plot_data, aes(x = hour)) +
   theme_minimal()
 
 ```
+
 ```{r}
 ggplot(plot_data, aes(x = Actual_Temperature, y = Actual_Temperature - Predicted_Temperature)) +
   geom_point() +
@@ -277,7 +272,6 @@ ggplot(plot_data, aes(x = Actual_Temperature, y = Actual_Temperature - Predicted
   theme_minimal()
 
 ```
-
 
 ```{r}
 ggplot(df, aes(x = temperature)) +
@@ -295,6 +289,7 @@ autoplot(decomposed) + labs(title = "Time Series Decomposition of Temperature")
 
 
 ```
+
 ```{r}
 library(ggplot2)
 
@@ -321,7 +316,4 @@ ggplot(plot_data, aes(x = Date, y = Predicted_Temperature)) +
 
 
 ```
-
-
-
 
