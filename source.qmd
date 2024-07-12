@@ -3,6 +3,6 @@ title: "Source"
 editor: visual
 ---
 
-**Sources**
+
 
 All data in this project was provided by ClimateNet
