@@ -224,10 +224,6 @@ ggplot(plot_data, aes(x = Actual_Temperature, y = Actual_Temperature - Predicted
 
 ```
 
-```{r}
-corrplot(cor(df[, -10]), method = "color")
-
-```
 
 ```{r}
 ggplot(df, aes(x = temperature)) +
@@ -272,20 +268,6 @@ ggplot(plot_data, aes(x = Date, y = Predicted_Temperature)) +
 
 ```
 
-```{r}
-# Assuming plot_data contains Actual and Predicted temperatures
-plot_data$residual <- plot_data$Actual - plot_data$Predicted
 
-# Create temperature bins for box plot
-plot_data$temp_bin <- cut(plot_data$Actual, breaks = seq(0, 40, by = 5))
-
-# Plot box plot of residuals by temperature range
-ggplot(plot_data, aes(x = temp_bin, y = residual)) +
-  geom_boxplot() +
-  labs(x = "Temperature Range", y = "Residual", title = "Residuals by Temperature Range") +
-  theme_minimal()
-
-
-```
 
 
