@@ -11,9 +11,11 @@ knitr::include_graphics("noaa-Led9c1SSNFo-unsplash.jpg")
 ```
 
 
+
 **Main Question: What Weather Will Tomorrow Bring?**
 
 Importance: Knowing tomorrow's weather helps you plan your day efficiently, whether it's deciding what to wear, scheduling outdoor activities, or preparing for weather-related events. It provides essential information that impacts daily routines and ensures safety and comfort.
+
 
 ```{r}
 #| echo: false
@@ -59,8 +61,6 @@ train <- data.frame(train_features, temperature = train_labels)
 #| include: false
 train
 ```
-
-
 
 ```{r}
 #| echo: false
@@ -187,3 +187,4 @@ ggplot(plot_data, aes(x = index)) +
   theme_minimal()
 
 ```
+
