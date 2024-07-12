@@ -1,0 +1,17 @@
+{
+  "hash": "d7c082081a38ce2803513958aaabfcbc",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Data\"\nauthor: \"Ghost\"\ndate: \"2024-07-10\"\noutput: html_document\nexecute:\n  echo: false\n  warning: false\n\n---\n\n\n\n\n\n\n\n\n\n\n\n\n\n::: {.cell}\n::: {.cell-output-display}\n![](example-1_files/figure-html/unnamed-chunk-7-1.png){width=672}\n:::\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n::: {.cell-output .cell-output-stdout}\n\n```\nMean Absolute Error (MAE): 0.2249909 \n```\n\n\n:::\n\n::: {.cell-output .cell-output-stdout}\n\n```\nAccuracy: 97.26944 %\n```\n\n\n:::\n:::\n\n::: {.cell}\n::: {.cell-output-display}\n![](example-1_files/figure-html/unnamed-chunk-10-1.png){width=672}\n:::\n:::\n\n::: {.cell}\n::: {.cell-output-display}\n![](example-1_files/figure-html/unnamed-chunk-11-1.png){width=672}\n:::\n:::\n\n::: {.cell}\n::: {.cell-output-display}\n![](example-1_files/figure-html/unnamed-chunk-12-1.png){width=672}\n:::\n:::\n\n::: {.cell}\n::: {.cell-output .cell-output-stdout}\n\n```\n         1          2          3          4          5          6          7 \n 5.1931920  7.4186013 -1.1679650  1.5852267  4.0243487  0.8138775  4.3750244 \n```\n\n\n:::\n:::\n\n::: {.cell}\n::: {.cell-output-display}\n![](example-1_files/figure-html/unnamed-chunk-14-1.png){width=672}\n:::\n:::\n\n::: {.cell}\n::: {.cell-output .cell-output-stdout}\n\n```\n# A tibble: 6 × 9\n  time                temperature pressure humidity particle1 particle2\n  <dttm>                    <dbl>    <dbl>    <dbl>     <dbl>     <dbl>\n1 2024-02-22 15:42:36       10.8      870.     38.6        14        24\n2 2024-02-22 15:57:36       11.2      870.     38.4        17        26\n3 2024-02-22 16:12:36       12.0      870.     36.8        17        28\n4 2024-02-22 16:27:36       11.0      870.     38.2        23        33\n5 2024-02-22 16:42:36        9.1      870.     40.6        21        35\n6 2024-02-22 16:57:36        8.71     870.     39.8        19        29\n# ℹ 3 more variables: particle3 <dbl>, speed <dbl>, rain <dbl>\n```\n\n\n:::\n:::\n\n::: {.cell}\n::: {.cell-output-display}\n![](example-1_files/figure-html/unnamed-chunk-16-1.png){width=672}\n:::\n:::\n\n::: {.cell}\n::: {.cell-output-display}\n![](example-1_files/figure-html/unnamed-chunk-17-1.png){width=672}\n:::\n:::\n\n::: {.cell}\n::: {.cell-output-display}\n![](example-1_files/figure-html/unnamed-chunk-18-1.png){width=672}\n:::\n:::\n\n::: {.cell}\n::: {.cell-output-display}\n![](example-1_files/figure-html/unnamed-chunk-19-1.png){width=672}\n:::\n:::\n\n::: {.cell}\n::: {.cell-output-display}\n![](example-1_files/figure-html/unnamed-chunk-20-1.png){width=672}\n:::\n:::\n",
+    "supporting": [
+      "example-1_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
