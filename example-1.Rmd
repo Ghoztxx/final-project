@@ -29,6 +29,8 @@ train_labels <- labels[train_indices]
 test_features <- features[-train_indices, ]
 test_labels <- labels[-train_indices]
 
+train <- data.frame(train_features, temperature = train_labels)
+
 
 ```
 
