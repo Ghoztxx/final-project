@@ -269,14 +269,7 @@ ggplot(plot_data, aes(x = hour)) +
   theme_minimal()
 
 ```
-```{r}
-ggplot(plot_data, aes(x = Actual_Temperature, y = Actual_Temperature - Predicted_Temperature)) +
-  geom_point() +
-  labs(x = "Actual Temperature", y = "Residual", title = "Residual Plot") +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "blue") +
-  theme_minimal()
 
-```
 
 
 ```{r}
@@ -289,7 +282,7 @@ ggplot(df, aes(x = temperature)) +
 
 ```{r}
 library(forecast)
-df_ts <- ts(df$temperature, frequency = 7)  # Assuming daily data
+df_ts <- ts(df$temperature, frequency = 7)  
 decomposed <- decompose(df_ts)
 autoplot(decomposed) + labs(title = "Time Series Decomposition of Temperature")
 
@@ -298,5 +291,30 @@ autoplot(decomposed) + labs(title = "Time Series Decomposition of Temperature")
 
 
 
+```{r}
 
+ggplot(df, aes(x = c(particle1, particle2, particle3), y = count)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(
+    title = "Particle Usage in Dataset",
+    x = "Particle",
+    y = "Count"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+graph2 <- ggplot(df, aes(x = time, y = temperature)) +
+  geom_bar(stat = 'identity', color = 'steelblue', alpha = 0.8) +  # Adjust appearance of bars
+  scale_fill_brewer(palette = "Set3") +  # Color palette for bars
+  labs(
+    title = "Temperature Over Time",
+    x = "Time",
+    y = "Temperature (°C)"
+  ) +
+  theme_minimal() +  # Use minimal theme
+  theme(legend.position = "none")  # Remove legend for fill color
+
+print(graph2)
+```
 
