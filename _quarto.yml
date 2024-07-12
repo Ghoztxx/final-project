@@ -8,7 +8,7 @@ website:
       - href: index.qmd
         text: Home
       - about.qmd
-      - text: Data
+      - text: Data Analysis
         menu:
           - href: EDA.qmd
             text: EDA
