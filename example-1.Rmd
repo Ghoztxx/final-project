@@ -1,0 +1,296 @@
+---
+title: "Data"
+author: "Ghost"
+date: "2024-07-10"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(randomForest)
+library(caret)
+library(corrplot)
+```
+
+```{r}
+
+df <- read_csv("data.csv")
+df$time <- as.POSIXct(df$time, format = "%Y-%m-%d %H:%M:%S")
+df <- df[, -10]
+
+features <- select(df, -time)
+labels <- df$temperature
+
+
+set.seed(123)
+train_indices <- createDataPartition(labels, p = 0.7, list = FALSE)
+train_features <- features[train_indices, ]
+train_labels <- labels[train_indices]
+test_features <- features[-train_indices, ]
+test_labels <- labels[-train_indices]
+
+
+```
+
+```{r}
+train
+```
+
+
+```{r}
+library(naniar)
+
+vis_miss(train)
+```
+
+```{r}
+sum(is.na(train$particle1))
+
+sum(is.na(train_labels))
+
+sum(is.na(train_features))
+
+```
+
+```{r}
+df$particle1[is.na(df$particle1)] <- mean(df$particle1, na.rm = TRUE)
+df$particle2[is.na(df$particle2)] <- mean(df$particle2, na.rm = TRUE)
+df$particle3[is.na(df$particle3)] <- mean(df$particle3, na.rm = TRUE)
+
+train$particle1[is.na(train$particle1)] <- mean(train$particle1, na.rm = TRUE)
+train$particle2[is.na(train$particle2)] <- mean(train$particle2, na.rm = TRUE)
+train$particle3[is.na(train$particle3)] <- mean(train$particle3, na.rm = TRUE)
+
+
+train_features$particle1[is.na(train_features$particle1)] <- mean(train_features$particle1, na.rm = TRUE)
+train_features$particle2[is.na(train_features$particle2)] <- mean(train_features$particle2, na.rm = TRUE)
+train_features$particle3[is.na(train_features$particle3)] <- mean(train_features$particle3, na.rm = TRUE)
+```
+
+```{r}
+rf_model <- randomForest(train_labels ~ ., data = train_features, ntree = 500)
+
+rf_model
+
+```
+
+```{r}
+varImpPlot(rf_model)
+```
+
+```{r}
+predictions <- predict(rf_model, newdata = test_features)
+
+predictions[is.na(predictions)] <- mean(predictions, na.rm = TRUE)
+```
+
+```{r}
+mae <- mean(abs(predictions - test_labels))
+cat("Mean Absolute Error (MAE):", mae, "\n")
+
+mape <- mean(abs(predictions - test_labels) / test_labels) * 100
+accuracy <- 100 - mape
+cat("Accuracy:", accuracy, "%\n")
+
+```
+
+```{r}
+library(ggplot2)
+
+
+plot_data <- data.frame(
+  Actual = test_labels,
+  Predicted = predictions
+)
+
+
+ggplot(plot_data, aes(x = Actual, y = Predicted)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "blue") + 
+  labs(x = "Actual Temperature", y = "Predicted Temperature", title = "Actual vs. Predicted Temperature") +
+  theme_minimal()
+
+```
+
+```{r}
+ggplot(plot_data, aes(x = Actual, y = Actual - Predicted)) +
+  geom_point() +
+  labs(x = "Actual Temperature", y = "Residual", title = "Residual Plot")
+
+```
+
+```{r}
+
+plot_data <- data.frame(
+  Actual = test_labels,   
+  Predicted = predictions 
+)
+
+plot_data$index <- seq_along(test_labels)
+
+ggplot(plot_data, aes(x = index)) +
+  geom_line(aes(y = Actual, color = "Actual")) + 
+  geom_line(aes(y = Predicted, color = "Predicted")) +  
+  scale_color_manual(name = "Series", values = c(Actual = "blue", Predicted = "red")) + 
+  labs(x = "Size", y = "Temperature", title = "Actual vs. Predicted Temperature") + 
+  theme_minimal()
+
+```
+```{r}
+
+# Simulate different scenarios for next week
+num_days <- 7
+new_data <- data.frame(
+  temperature = rep(NA, num_days),
+  humidity = rep(NA, num_days),
+  speed = rep(NA, num_days),
+  rain = rep(NA, num_days),
+  pressure = rep(NA, num_days),
+  particle1 = rep(NA, num_days), 
+  particle2 = rep(NA, num_days), 
+  particle3 = rep(NA, num_days)
+)
+
+# Simulate different scenarios for each day
+for (day in 1:num_days) {
+  new_data$temperature[day] <- mean(train$temperature, na.rm = TRUE) + rnorm(1, mean = 0, sd = 3)
+  new_data$humidity[day] <- mean(train$humidity, na.rm = TRUE) + rnorm(1, mean = 0, sd = 5)
+  new_data$speed[day] <- mean(train$speed, na.rm = TRUE) + rnorm(1, mean = 0, sd = 2)
+  new_data$rain[day] <- mean(train$rain, na.rm = TRUE) + rnorm(1, mean = 0, sd = 1)
+  new_data$pressure[day] <- mean(train$pressure, na.rm = TRUE) + rnorm(1, mean = 0, sd = 3)
+  new_data$particle1[day] <- mean(train$particle1, na.rm = TRUE) + rnorm(1, mean = 0, sd = 0.5)
+  new_data$particle2[day] <- mean(train$particle2, na.rm = TRUE) + rnorm(1, mean = 0, sd = 0.5)
+  new_data$particle3[day] <- mean(train$particle3, na.rm = TRUE) + rnorm(1, mean = 0, sd = 0.5)
+}
+
+# Predict temperatures for next week
+predictions_next_week <- predict(rf_model, newdata = new_data)
+predictions_next_week
+
+
+```
+
+```{r}
+# Set the starting date to February 23, 2022
+start_date <- as.Date("2022-02-23")
+
+# Generate dates for the next week
+dates_next_week <- seq(start_date, by = "day", length.out = 7)
+
+# Prepare data for plotting
+plot_data_next_week <- data.frame(
+  Date = dates_next_week,
+  Predicted_Temperature = predictions_next_week
+)
+
+# Plot predicted temperatures for next week
+ggplot(plot_data_next_week, aes(x = Date, y = Predicted_Temperature)) +
+  geom_line(color = "blue") +
+  geom_point(color = "blue") +
+  labs(x = "Date", y = "Predicted Temperature", title = "Predicted Temperatures for Next Week") +
+  theme_minimal()
+
+```
+
+
+
+```{r}
+tail(df)
+
+```
+
+
+
+```{r}
+df$time <- as.POSIXct(df$time)
+
+
+plot_data <- data.frame(
+  hour = df$time,
+  Actual_Temperature = df$temperature,
+  Predicted_Temperature = c(rep(NA, nrow(df) - 7), predictions_next_week)
+)
+
+
+ggplot(plot_data, aes(x = hour)) +
+  geom_line(aes(y = Actual_Temperature, color = "Actual")) +
+  geom_line(aes(y = Predicted_Temperature, color = "Predicted"), linetype = "dashed") +
+  labs(x = "Date", y = "Temperature", title = "Actual vs. Predicted Temperature") +
+  scale_color_manual(name = "Series", values = c("Actual" = "blue", "Predicted" = "red")) +
+  theme_minimal()
+
+```
+```{r}
+ggplot(plot_data, aes(x = Actual_Temperature, y = Actual_Temperature - Predicted_Temperature)) +
+  geom_point() +
+  labs(x = "Actual Temperature", y = "Residual", title = "Residual Plot") +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "blue") +
+  theme_minimal()
+
+```
+
+```{r}
+corrplot(cor(df[, -10]), method = "color")
+
+```
+
+```{r}
+ggplot(df, aes(x = temperature)) +
+  geom_histogram(binwidth = 1, fill = "blue", color = "black", alpha = 0.5) +
+  labs(x = "Temperature", y = "Frequency", title = "Distribution of Temperature") +
+  theme_minimal()
+
+```
+
+```{r}
+library(forecast)
+df_ts <- ts(df$temperature, frequency = 7)  # Assuming daily data
+decomposed <- decompose(df_ts)
+autoplot(decomposed) + labs(title = "Time Series Decomposition of Temperature")
+
+
+```
+```{r}
+library(ggplot2)
+
+# Example data (replace with your actual data)
+set.seed(123)
+dates <- seq(as.Date("2024-07-01"), by = "day", length.out = 30)
+predictions_next_week <- rnorm(7, mean = 20, sd = 3)
+plot_data <- data.frame(
+  Date = dates,
+  Predicted_Temperature = c(rep(NA, 30 - 7), predictions_next_week)
+)
+
+# Calculate upper and lower bounds for prediction interval
+plot_data$upper <- plot_data$Predicted_Temperature + 1.96 * sd(predictions_next_week)
+plot_data$lower <- plot_data$Predicted_Temperature - 1.96 * sd(predictions_next_week)
+
+# Plot with prediction interval
+ggplot(plot_data, aes(x = Date, y = Predicted_Temperature)) +
+  geom_line(color = "red") +
+  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "blue", alpha = 0.3) +
+  geom_point(color = "red") +
+  labs(x = "Date", y = "Temperature", title = "Predicted Temperatures with Prediction Interval") +
+  theme_minimal()
+
+
+```
+
+```{r}
+# Assuming plot_data contains Actual and Predicted temperatures
+plot_data$residual <- plot_data$Actual - plot_data$Predicted
+
+# Create temperature bins for box plot
+plot_data$temp_bin <- cut(plot_data$Actual, breaks = seq(0, 40, by = 5))
+
+# Plot box plot of residuals by temperature range
+ggplot(plot_data, aes(x = temp_bin, y = residual)) +
+  geom_boxplot() +
+  labs(x = "Temperature Range", y = "Residual", title = "Residuals by Temperature Range") +
+  theme_minimal()
+
+
+```
+
+
