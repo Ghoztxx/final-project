@@ -7,4 +7,20 @@ image: "noaa-Led9c1SSNFo-unsplash.jpg"
 
 Importance: Knowing tomorrow's weather helps you plan your day efficiently, whether it's deciding what to wear, scheduling outdoor activities, or preparing for weather-related events. It provides essential information that impacts daily routines and ensures safety and comfort.
 
+```{r}
 
+plot_data <- data.frame(
+  Actual = test_labels,   
+  Predicted = predictions 
+)
+
+plot_data$index <- seq_along(test_labels)
+
+ggplot(plot_data, aes(x = index)) +
+  geom_line(aes(y = Actual, color = "Actual")) + 
+  geom_line(aes(y = Predicted, color = "Predicted")) +  
+  scale_color_manual(name = "Series", values = c(Actual = "blue", Predicted = "red")) + 
+  labs(x = "Size", y = "Temperature", title = "Actual vs. Predicted Temperature") + 
+  theme_minimal()
+
+```
