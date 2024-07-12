@@ -1,0 +1,93 @@
+---
+title: "EDA"
+editor: visual
+execute:
+  echo: false
+  warning: false
+---
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| include: false
+library(tidyverse)
+library(randomForest)
+library(caret)
+library(corrplot)
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| include: false
+
+df <- read_csv("data.csv")
+df$time <- as.POSIXct(df$time, format = "%Y-%m-%d %H:%M:%S")
+df <- df[, -10]
+
+features <- select(df, -time)
+labels <- df$temperature
+
+
+set.seed(123)
+train_indices <- createDataPartition(labels, p = 0.7, list = FALSE)
+train_features <- features[train_indices, ]
+train_labels <- labels[train_indices]
+test_features <- features[-train_indices, ]
+test_labels <- labels[-train_indices]
+
+train <- data.frame(train_features, temperature = train_labels)
+
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| include: false
+train
+```
+
+
+
+```{r}
+ggplot(df, aes(x = temperature)) +
+  geom_histogram(binwidth = 1, fill = "blue", color = "black", alpha = 0.5) +
+  labs(x = "Temperature", y = "Frequency", title = "Distribution of Temperature") +
+  theme_minimal()
+
+```
+
+*This histogram illustrates the distribution of temperature values in the dataset. It shows how frequently different temperature ranges occur, helping to understand the central tendency and spread of temperature measurements.*
+
+```{r}
+library(forecast)
+df_ts <- ts(df$temperature, frequency = 7)  
+decomposed <- decompose(df_ts)
+autoplot(decomposed) + labs(title = "Time Series Decomposition of Temperature")
+
+
+```
+
+*The decomposition plot breaks down the temperature data into its seasonal, trend, and residual components. This helps in identifying patterns over time, such as recurring seasonal variations or long-term trends in temperature changes.*
+
+```{r}
+graph2 <- ggplot(df, aes(x = time, y = temperature)) +
+  geom_bar(stat = 'identity', color = 'steelblue', alpha = 0.8) +  # Adjust appearance of bars
+  scale_fill_brewer(palette = "Set3") +  # Color palette for bars
+  labs(
+    title = "Temperature Over Time",
+    x = "Time",
+    y = "Temperature (°C)"
+  ) +
+  theme_minimal() +  # Use minimal theme
+  theme(legend.position = "none")  # Remove legend for fill color
+
+print(graph2)
+```
+
+
+*This bar plot visualizes how temperature varies over time, using timestamps (time) and corresponding temperature values. Each bar represents a specific time period, providing a clear overview of how temperatures fluctuate across different time points.*
