@@ -287,5 +287,6 @@ ggplot(plot_data, aes(x = hour)) +
 
 ```
 
-*This plot compares hourly actual temperatures with predicted temperatures, including predictions for the next week. It provides a detailed view of model performance over time.*
+*This plot compares hourly actual temperatures with predicted temperatures, including predictions for the next week. It provides a detailed view of model performance over time.* 
+
 
