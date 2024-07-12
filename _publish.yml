@@ -1,0 +1,4 @@
+- source: project
+  quarto-pub:
+    - id: 5c856ea4-5190-47de-80f0-8de4cde49e7b
+      url: 'https://ghost.quarto.pub/climate_net_natali'
