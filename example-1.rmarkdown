@@ -54,8 +54,6 @@ train <- data.frame(train_features, temperature = train_labels)
 train
 ```
 
-
-
 ```{r}
 #| echo: false
 #| warning: false
@@ -103,7 +101,9 @@ rf_model
 
 imporctance <- varImpPlot(rf_model)
 ```
+
 *This plot displays the importance of each predictor variable in the random forest model. It helps identify which features (such as humidity, speed, etc.) have the most significant influence on predicting temperature.*
+
 
 
 ```{r}
@@ -152,7 +152,9 @@ plot1 <- ggplot(plot_data, aes(x = Actual, y = Predicted)) +
 
 ```
 
+
 *This scatter plot compares the actual temperature values with the predicted values from the random forest model. The dashed line represents perfect prediction, where actual equals predicted temperature.*
+
 
 ```{r}
 #| echo: false
@@ -186,6 +188,7 @@ ggplot(plot_data, aes(x = index)) +
   theme_minimal()
 
 ```
+
 ```{r}
 plot1
 ```
@@ -193,7 +196,9 @@ plot1
 ```{r}
 plot2
 ```
+
 *This plot shows the residuals (difference between actual and predicted temperatures) against the actual temperatures. It helps assess the model's performance and detect any patterns in prediction errors.*
+
 
 
 ```{r}
@@ -235,7 +240,6 @@ predictions_next_week
 
 ```
 
-
 ```{r}
 # Set the starting date to February 23, 2022
 start_date <- as.Date("2022-02-23")
@@ -258,7 +262,9 @@ ggplot(plot_data_next_week, aes(x = Date, y = Predicted_Temperature)) +
 
 ```
 
+
 *This line plot predicts temperatures for the next week based on the trained random forest model. It helps users anticipate temperature trends for planning purposes.*
+
 
 
 
@@ -284,6 +290,8 @@ ggplot(plot_data, aes(x = hour)) +
 
 ```
 
+
 *This plot compares hourly actual temperatures with predicted temperatures, including predictions for the next week. It provides a detailed view of model performance over time.* 
+
 
 
